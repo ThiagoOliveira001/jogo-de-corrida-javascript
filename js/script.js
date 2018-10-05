@@ -1,5 +1,6 @@
 var context;
 var canvas;
+var velocidade = 50;
 $(document).ready(function () {
     $("#corrida").css("border", 0).css("padding", 0).css("margin", 0);
     $("#corrida").attr("width", $(window).width()).attr("height", $(window).height());
@@ -67,9 +68,9 @@ function criaJogo() {
     for (var i = 0; i < 20; i++) {
         context.fillRect(centro, (i * faixas), 20, faixas - 15);
     }
+    //movimentção da rua
     var aux = 5;
     var ey = 5;
-    var velocidade = 50;
     setInterval(() => {
 
         if (ey > canvas.height) {
@@ -90,6 +91,12 @@ function criaJogo() {
         aux += 5;
         ey = aux;
     }, velocidade);
+
+    //Elementos do jogo
+    var carroPreto = new Image(100,100);
+    carroPreto.src = "img/car_black.svg";
+    console.log(carroPreto);
+    context.drawImage(carroPreto, 500, 500);
     //requestAnimationFrame(movimentaRua(faixas, quadradosGuia, centro, ey));
 }
 

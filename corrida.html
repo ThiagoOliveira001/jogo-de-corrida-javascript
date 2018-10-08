@@ -19,6 +19,29 @@
         Este navegador não possui suporte a canvas!
     </canvas>
     <p style="font-size: 0.5px;">.</p>
+    <div id="options">
+        <div>
+            <p>SCORE: <span id="pts">0</span></p>
+        </div>
+        <div>
+            <img id="carro-selecionado" src="img/car_black.svg" width="80" height="100">
+        </div>
+        <div>
+            <p>RECORD: <span id="record">0</span></p>
+        </div> 
+        <div>
+            <select id="carro">
+                <option value="img/car_black.svg">Preto</option>
+                <option value="img/car_blue.svg">Azul</option>
+                <option value="img/car_red.svg">Vermelho</option>
+                <option value="img/car_yellow.svg">Amarelo</option>
+            </select>
+        </div>
+        <div>
+            <button id="start">START</button>
+            <button id="clear-rc">RESET</button>
+        </div>
+    </div>
 </body>
 
 </html>

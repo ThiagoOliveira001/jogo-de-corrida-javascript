@@ -15,6 +15,16 @@ html , body {
     overflow: hidden;
 }
 
+#options {
+    display: grid;
+    grid-template-columns: 2fr;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 30px;
+}
+
+
 @font-face {
     font-family: 'mortal';
     src: url('../fonts/mortal-kombat-4.woff') format('woff');

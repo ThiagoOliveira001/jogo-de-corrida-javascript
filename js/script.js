@@ -44,7 +44,6 @@ function Inimigo(src, x, y) {
         var colisaoYtopo = this.y >= (carro.y - carro.height + 2) && this.y <= (carro.height + this.y);
         var colisaoXBase = (carro.x + carro.width) >= this.x && (carro.x + carro.width) <= (this.x + this.width);
         var colisaoYBase = (carro.y + carro.width) >= this.y && (carro.y + carro.height) <= (this.y + this.height);
-        console.log(velocidade);
         return (colisaoXtopo && colisaoYtopo) || (colisaoYBase && colisaoXBase);
     }
 }
@@ -99,6 +98,7 @@ function Carro(src, x, y) {
         this.y -= value;
     }
 }
+
 $(document).ready(function () {
     $("#corrida").css("border", 0).css("padding", 0).css("margin", 0);
     $("#corrida").attr("width", 1200).attr("height", 650);
@@ -221,36 +221,37 @@ function criaJogo() {
     // };
     carro = new Carro(carroEscolhido, 600, 500);
     inimigos();
-    document.addEventListener("keydown", function (e) {
-        var mv = e.which || e.KeyCode;
-        gameStart();
-        switch (mv) {
-            //Esquerda
-            case 37, 97, 65:
-                carro.moveLeft(10);
-                desenhaImg(carro.getImg(), { x: carro.getX() , y: carro.getY() }  , 140, 140);
-                break;
-            //Direita
-            case 39, 100, 68:
-                carro.moveRigth(10);
-                desenhaImg(carro.getImg(), { x: carro.getX() , y: carro.getY() } , 140, 140);
-                break;
-            //Cima
-            case 38, 119, 87:
-                carro.moveUp(10);
-                desenhaImg(carro.getImg(), { x: carro.getX() , y: carro.getY() } , 140, 140);
-                break;
-            //Baixo
-            case 40, 115, 83:
-                carro.moveDown(10);
-                desenhaImg(carro.getImg(), { x: carro.getX() , y: carro.getY() } , 140, 140);
-                break;
-            default:
-                break;
-        }
-    });
+    document.addEventListener("keydown", movimentaCarro); 
     //requestAnimationFrame(movimentaRua(faixas, quadradosGuia, centro, ey));
 }
+function movimentaCarro(e) {
+    var mv = e.which || e.KeyCode;
+    gameStart();
+    switch (mv) {
+        //Esquerda
+        case 37, 97, 65:
+            carro.moveLeft(10);
+            desenhaImg(carro.getImg(), { x: carro.getX() , y: carro.getY() }  , 140, 140);
+            break;
+        //Direita
+        case 39, 100, 68:
+            carro.moveRigth(10);
+            desenhaImg(carro.getImg(), { x: carro.getX() , y: carro.getY() } , 140, 140);
+            break;
+        //Cima
+        case 38, 119, 87:
+            carro.moveUp(10);
+            desenhaImg(carro.getImg(), { x: carro.getX() , y: carro.getY() } , 140, 140);
+            break;
+        //Baixo
+        case 40, 115, 83:
+            carro.moveDown(10);
+            desenhaImg(carro.getImg(), { x: carro.getX() , y: carro.getY() } , 140, 140);
+            break;
+        default:
+            break;
+    }
+};
 
 // function movimentaRua(faixas, quadradosGuia, centro, ey) {
 //     var aux = 5;
@@ -303,7 +304,7 @@ function inimigos() {
             if (!enemys[p].bateu(carro)) {
                 setTimeout(loop, velocidade);
             } else {
-                
+                gameOver(enemys[p]);
             }
                 
 
@@ -323,4 +324,31 @@ function gameStart() {
     function stop() {
         clearInterval(acelera);      
     }
+}
+
+function gameOver(inimigoColisao) {
+    document.removeEventListener("keydown", movimentaCarro);
+    var animate = [
+        'img/bloodsplats_0001.png',
+        'img/bloodsplats_0002.png',
+        'img/bloodsplats_0003.png',
+        'img/bloodsplats_0004.png',
+        'img/bloodsplats_0005.png',
+        'img/bloodsplats_0006.png',
+        'img/bloodsplats_0007.png'
+    ];
+    var sprite = setInterval(() => {
+        if (animate.length == 0) {
+            clearInterval(sprite);
+        }
+        var img = new Image();
+        img.src = animate.shift();
+        img.onload = function() {
+            context.drawImage(this, inimigoColisao.getX(), inimigoColisao.getY(), 120, 120);
+        }
+    }, 50);
+    context.font = "9em mortal";
+    context.fillStyle = "red";
+    context.textAlign = "center";
+    context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
 }

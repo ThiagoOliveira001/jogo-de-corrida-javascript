@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -11,10 +11,10 @@
 
 <body>
     <!-- <iframe src="audio/Gear.mp3" allow="autoplay" style="display:none" id="iframeAudio">
-    </iframe>
+    </iframe> -->
     <audio autoplay loop>
         <source src="audio/Gear.mp3" type="audio/mpeg">
-    </audio> -->
+    </audio>
     <canvas id="corrida" >
         Este navegador não possui suporte a canvas!
     </canvas>
@@ -40,6 +40,25 @@
         <div>
             <button id="start">START</button>
             <button id="clear-rc">RESET</button>
+        </div>
+        <div>
+            <button id="try-again">TRY AGAIN</button>
+        </div>
+    </div>
+    <div id="info">
+        <div style="font-size: 0.7em;margin-right: 10px;">
+            <h3>História</h3>
+            <p style="font-family: 'Arial';">
+                Durante uma viagem você cruza com uma migração de pombos obesos mutantes, <br>
+                eles não conseguem voar acima de seu carro, e você não quer sujar o carro <br>
+                então é melhor não atingilos 
+            </p>
+        </div>
+        <div>
+            <figure>
+                <img src="img/wasd.png" width="80" height="100">
+                <figcaption style="margin-right: 10px">Movimenta o veiculo</figcaption>
+            </figure>
         </div>
     </div>
 </body>

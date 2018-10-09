@@ -1,33 +1,52 @@
 var context;
 var canvas;
-var velocidade = 1000;
+var velocidade = 500;
 var score = 0;
 var carroEscolhido = 'img/car_black.svg';
 var carro;
 var finish = false;
+var quadradosGuia;
+var movimentoVelocidade = 10;
 //Classes
-function Inimigo(src, x, y) {
+function InimigoSprite(x, y) {
     this.x = x;
     this.y = y;
-    this.img = new Image();
-    this.img.src = src;
     this.width = 80;
     this.height = 80;
     // this.img.onload = function () {
     //     context.drawImage(this.img, this.x, this.y, 80, 80);
     // }
+    this.frames = [
+        'img/frame-1.png',
+        'img/frame-2.png',
+        'img/frame-3.png',
+        'img/frame-4.png',
+        'img/frame-5.png',
+        'img/frame-6.png',
+        'img/frame-7.png',
+        'img/frame-8.png'
+    ];
 
-    this.setSrc = function (src) {
-        this.src = src;
+    this.fly = function () {
+        var i = 0;
+        var flyng = setInterval(() => {
+            if (i == 7 || finish) {
+                clearInterval(flyng);
+            }
+            let fr = new Image();
+            fr.src = this.frames[i];
+            context.fillStyle = "#1C1C1C";
+            context.fillRect(this.x - 5, this.y - movimentoVelocidade, this.width + 15, this.height);
+            context.drawImage(fr, this.x, this.y, this.width, this.height);
+            i++;
+        }, 100);
     }
+
     this.setX = function (x) {
         this.x = x;
     }
     this.setY = function (y) {
         this.y = y;
-    }
-    this.getSrc = function () {
-        return this.src;
     }
     this.getX = function () {
         return this.x;
@@ -36,16 +55,11 @@ function Inimigo(src, x, y) {
         return this.y;
     }
 
-    this.getImg = function () {
-        return this.img;
-    }
-
     this.bateu = function (carro) {
-        var colisaoXtopo = this.x >= carro.x && this.x <= (carro.width + carro.x);
-        var colisaoYtopo = this.y >= (carro.y - carro.height + 2) && this.y <= (carro.height + this.y);
-        var colisaoXBase = (carro.x + carro.width) >= this.x && (carro.x + carro.width) <= (this.x + this.width);
-        var colisaoYBase = (carro.y + carro.width) >= this.y && (carro.y + carro.height) <= (this.y + this.height);
-        return (colisaoXtopo && colisaoYtopo) || (colisaoYBase && colisaoXBase);
+        if (this.x + this.width > carro.x && this.x < carro.x + carro.width && this.y + this.height > carro.y && this.y < carro.y + this.height) {
+            return true;
+        }
+        return false;
     }
 }
 
@@ -53,8 +67,8 @@ function Carro(x, y, img) {
     this.x = x;
     this.y = y;
     this.img = img;
-    this.width = 80;
-    this.height = 80;
+    this.width = 140;
+    this.height = 140;
 
     this.setX = function (x) {
         this.x = x;
@@ -81,7 +95,7 @@ function Carro(x, y, img) {
 
     this.moveRigth = function (value) {
         if ((this.x + value) <= 890) {
-            this.x += value;   
+            this.x += value;
         }
     }
 
@@ -93,18 +107,18 @@ function Carro(x, y, img) {
 
     this.moveUp = function (value) {
         if ((this.y - value) > 0) {
-            this.y -= value;   
+            this.y -= value;
         }
     }
 }
-
+//Ações no documento html
 $(document).ready(function () {
     $("#corrida").css("border", 0).css("padding", 0).css("margin", 0);
     $("#corrida").attr("width", 1200).attr("height", 650);
     canvas = document.getElementById("corrida");
-
+    criaJogo();
     $("#start").click(function () {
-        criaJogo();
+        gameStart();
         var addPts = setInterval(() => {
             score += 1;
             if (!finish) {
@@ -113,12 +127,14 @@ $(document).ready(function () {
                 clearInterval(addPts);
             }
         }, 50);
+        $(this).prop("disabled", true);
+        $("#carro").prop("disabled", true);
     });
     if (localStorage.getItem('record')) {
         $("#record").text(localStorage.getItem('record'));
     }
 
-    $("#clear-rc").click(function(){
+    $("#clear-rc").click(function () {
         $("#record").text(0);
         localStorage.setItem('record', 0);
     });
@@ -126,26 +142,21 @@ $(document).ready(function () {
         $("#carro-selecionado").attr("src", $(this).val());
         carroEscolhido = $(this).val();
     });
-});
-// $(window).bind("resize", function () {
-//     $("#corrida").attr("width", $(window).width()).attr("height", $(window).height());
-//     canvas.width = $("#corrida").width();
-//     canvas.height = $("#corrida").height();
-//     criaJogo();
-// });
 
+    $("#try-again").click(function () {
+        tryagain();
+    });
+});
+
+//Criação de cenario
 function criaJogo() {
     context = canvas.getContext('2d');
-    var quadradosGuia = canvas.height / 8;
+    quadradosGuia = canvas.height / 8;
     //Desenhando grama
     desenhaGrama();
 
-    //Desenhando guias
-
-    //Esquerda
-    // context.beginPath();
-    // context.moveTo(canvas.width / 5.45,0);
-    // context.lineTo(canvas.width / 5.45, canvas.height);
+    //Faixas vermelho e branco 
+    //Esquerda 
     for (var i = 0; i < 8; i++) {
         if (i % 2 == 0) {
             context.fillStyle = "red";
@@ -158,8 +169,6 @@ function criaJogo() {
 
 
     //Direita
-    // context.moveTo(canvas.width - 250, 0);
-    // context.lineTo(canvas.width - 250, canvas.height);
     for (var i = 0; i < 8; i++) {
         if (i % 2 == 0) {
             context.fillStyle = "red";
@@ -170,40 +179,97 @@ function criaJogo() {
         }
     }
 
-    // context.lineWidth = 1;
-    // context.strokeStyle = 'red';
+}
 
-    // context.stroke();
 
-    //Desenhando na rua as faixas
-    // context.fillStyle = "white";
-    // var centro = canvas.width / 2;
-    // var faixas = canvas.height / 6;
-    // for (var i = 0; i < 20; i++) {
-    //     context.fillRect(centro, (i * faixas), 20, faixas - 15);
-    // }
-    //movimentção da rua
-    var aux = 5;
-    var ey = 5;
+//Movimentação do veiculo
+function movimentaCarro(e) {
+    var mv = e.which || e.KeyCode;
+    switch (mv) {
+        //Esquerda
+        case 37, 97, 65:
+            carro.moveLeft(10);
+            desenhaCarro();
+            break;
+        //Direita
+        case 39, 100, 68:
+            carro.moveRigth(10);
+            desenhaCarro();
+            break;
+        //Cima
+        case 38, 119, 87:
+            carro.moveUp(10);
+            desenhaCarro();
+            break;
+        //Baixo
+        case 40, 115, 83:
+            carro.moveDown(10);
+            desenhaCarro();
+            break;
+        default:
+            break;
+    }
+};
+//Desenho da imagen do carro
+function desenhaCarro() {
+    context.fillStyle = "#1C1C1C";
+    context.fillRect(carro.getX() - 10, carro.getY() - 10, carro.width + 10, canvas.height);
+    context.drawImage(carro.getImg(), carro.getX(), carro.getY(), carro.width, carro.height);
+    // context.drawImage(img, cords.x, cords.y, w, h);
+}
+
+function desenhaGrama() {
+    context.beginPath();
+    context.fillStyle = "#63ca00";
+    context.fillRect(0, 0, 175, canvas.height);
+    context.fillRect(1069, 0, 175, canvas.height);
+}
+//Cria e movimenta os inimigos
+function inimigos() {
+    var ry = [0, 40, 80, 120, 150];
+    var rx = [220, 360, 510, 648, 820];
+    var inimigo = new InimigoSprite(canvas.width / 2, 0);
+    var enemys = [];
+    for (var i = 0; i < 5; i++) {
+        enemys.push(new InimigoSprite( canvas.width / 2, 0));
+    }
+    function loop() {
+        for (var i = 0; i < 5; i++) {
+            var colisao = enemys[i].bateu(carro);
+            if (colisao) {
+                gameOver(enemys[i]);
+                break;
+            } else {
+                if (enemys[i].getY() > canvas.height) {
+                    enemys[i].setY(ry[Math.floor(Math.random() * (4))]);
+                    enemys[i].setX(rx[Math.floor(Math.random() * (4))]);   
+                }
+                if (!colisao) {
+                    enemys[i].setY(enemys[i].getY() + movimentoVelocidade);
+                    enemys[i].fly();
+                }
+            }
+        }
+
+        if (!colisao) {
+            setTimeout(loop, velocidade);
+        }
+
+    }
+    setTimeout(loop, velocidade);
+}
+
+//Inicia o jogo
+function gameStart() {
+    var imgCarro = new Image();
+    imgCarro.src = carroEscolhido;
+    imgCarro.onload = function () {
+        context.drawImage(this, 600, 500, 140, 140);
+    }
+    carro = new Carro(600, 500, imgCarro);
+    document.addEventListener("keydown", movimentaCarro);
     var div = 2;
     function movimentaCenario() {
-        // if (ey > canvas.height) {
-        //     aux = 0;
-        // }
-        // // context.fillStyle = "white";
-        // // context.fillRect(centro,ey - 45, 20, faixas - 15);  
-        // for (var i = 0; i < 6; i++) {
-        //     context.fillStyle = "#313237";
-        //     context.fillRect(centro, ey - 5, 20, faixas - 15);
-        //     context.fillStyle = "white";
-        //     context.fillRect(centro, ey, 20, faixas - 15);
-        //     context.fillRect(centro, ey - canvas.height, 20, faixas - 15);
-        //     context.fillStyle = "#313237";
-        //     context.fillRect(centro, ey - (canvas.height + 5), 20, 5);
-        //     ey += faixas;
-        // }
-        // aux += 5;
-        // ey = aux;
         //Lateral vermelha e branca
         for (var i = 0; i < 8; i++) {
             if (div == 2) {
@@ -234,125 +300,20 @@ function criaJogo() {
         }
     }
     setTimeout(movimentaCenario, velocidade);
-
-    //Elementos do jogo
-    // var carro = new Image();
-    // carro.src = "img/car_black.svg";
-    // carro.onload = function () {
-    //     context.drawImage(this, posicaoCarro.x, posicaoCarro.y, 140, 140);
-    // };
-    var imgCarro = new Image();
-    imgCarro.src = carroEscolhido;
-    imgCarro.onload = function () {
-        context.drawImage(this, 600, 500, 140, 140);
-    }
-    carro = new Carro(600, 500, imgCarro);
     inimigos();
-    document.addEventListener("keydown", movimentaCarro);
-    //requestAnimationFrame(movimentaRua(faixas, quadradosGuia, centro, ey));
-}
-function movimentaCarro(e) {
-    var mv = e.which || e.KeyCode;
-    gameStart();
-    switch (mv) {
-        //Esquerda
-        case 37, 97, 65:
-            carro.moveLeft(10);
-            desenhaImg(carro.getImg(), { x: carro.getX(), y: carro.getY() }, 140, 140);
-            break;
-        //Direita
-        case 39, 100, 68:
-            carro.moveRigth(10);
-            desenhaImg(carro.getImg(), { x: carro.getX(), y: carro.getY() }, 140, 140);
-            break;
-        //Cima
-        case 38, 119, 87:
-            carro.moveUp(10);
-            desenhaImg(carro.getImg(), { x: carro.getX(), y: carro.getY() }, 140, 140);
-            break;
-        //Baixo
-        case 40, 115, 83:
-            carro.moveDown(10);
-            desenhaImg(carro.getImg(), { x: carro.getX(), y: carro.getY() }, 140, 140);
-            break;
-        default:
-            break;
-    }
-};
 
-// function movimentaRua(faixas, quadradosGuia, centro, ey) {
-//     var aux = 5;
-//     for (var i = 0; i < 6; i++) {
-//         context.fillStyle = "#313237";
-//         context.fillRect(centro, ey - 5, 20, faixas - 15);
-//         context.fillStyle = "white";
-//         context.fillRect(centro, ey, 20, faixas - 15);
-//         ey += faixas;
-//     }
-//     aux += 5;
-//     ey = aux;
-//     context.fillStyle = "white";
-//     context.fillRect(centro, ey, 20, faixas - 15);
-//     requestAnimationFrame(movimentaRua(faixas, quadradosGuia, centro, ey + 5));
-// }
-
-function desenhaImg(img, cords, w, h) {
-    context.fillStyle = "#313237";
-    context.fillRect(cords.x, cords.y - 10, w, h + 20);
-    desenhaGrama();
-    context.drawImage(img, cords.x, cords.y, w, h);
-}
-
-function desenhaGrama() {
-    context.beginPath();
-    context.fillStyle = "#63ca00";
-    context.fillRect(0, 0, 175, canvas.height);
-    context.fillRect(1069, 0, 175, canvas.height);
-}
-
-function inimigos() {
-    var enemys = [
-        new Inimigo("img/obs-domador.svg", canvas.width / 2, 0),
-        new Inimigo("img/obs-galinha.svg", canvas.width / 2, 0),
-        new Inimigo("img/obs-pinguin.svg", canvas.width / 2, 0),
-        new Inimigo("img/onikero.svg", canvas.width / 2, 0)
-    ];
-    var p = 0;
-    function loop() {
-        var colisao = enemys[p].bateu(carro);
-        if (colisao) {
-            desenhaImg(carro.getImg(), carro.x, carro.y, carro.width, carro.height);
-            gameOver(enemys[p]);
-        } else {
-            if (enemys[p].getY() > canvas.height) {
-                enemys[p].setY(0);
-                p = Math.floor(Math.random() * (4));
-                enemys[p].setX(Math.floor(Math.random() * (1025 - 280) + 220));
-            }
-            desenhaImg(enemys[p].getImg(), { x: enemys[p].getX(), y: enemys[p].getY() }, 80, 80);
-            enemys[p].setY(enemys[p].getY() + 10);
-        }
-        if (!colisao) {
-            setTimeout(loop, velocidade);
-        }
-    }
-    setTimeout(loop, velocidade);
-}
-
-
-function gameStart() {
     var acelera = setInterval(() => {
-        if (velocidade <= 250) {
-            velocidade = 150;
+        if (velocidade <= 100) {
             stop();
         }
-        velocidade -= 150;
-    }, 5000)
+        movimentoVelocidade += 1;
+        velocidade -= 50;
+    }, 8000)
     function stop() {
         clearInterval(acelera);
     }
 }
-
+//Ações para serem executadas após falha do usuário
 function gameOver(inimigoColisao) {
     finish = true;
     document.removeEventListener("keydown", movimentaCarro);
@@ -365,20 +326,21 @@ function gameOver(inimigoColisao) {
         'img/bloodsplats_0006.png',
         'img/bloodsplats_0007.png'
     ];
+    //Animação sangue
     var sprite = setInterval(() => {
         if (animate.length == 0) {
+            context.font = "9em mortal";
+            context.fillStyle = "red";
+            context.textAlign = "center";
+            context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
             clearInterval(sprite);
         }
         var img = new Image();
         img.src = animate.shift();
         img.onload = function () {
-            context.drawImage(this, inimigoColisao.getX(), inimigoColisao.getY(), 80, 80);
+            context.drawImage(this, inimigoColisao.getX() - 10, inimigoColisao.getY() - 10, 140, 140);
         }
-    }, 50);
-    context.font = "9em mortal";
-    context.fillStyle = "red";
-    context.textAlign = "center";
-    context.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+    }, 30);
 
     if (localStorage.getItem('record')) {
         if (localStorage.getItem('record') < score) {
@@ -387,4 +349,8 @@ function gameOver(inimigoColisao) {
     } else {
         localStorage.setItem('record', score);
     }
+}
+// Faz um reload na pagina para reiniciar o jogo
+function tryagain() {
+    location.reload();
 }

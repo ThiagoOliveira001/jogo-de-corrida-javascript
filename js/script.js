@@ -67,8 +67,8 @@ function Carro(x, y, img) {
     this.x = x;
     this.y = y;
     this.img = img;
-    this.width = 140;
-    this.height = 140;
+    this.width = 120;
+    this.height = 120;
 
     this.setX = function (x) {
         this.x = x;
@@ -111,7 +111,7 @@ function Carro(x, y, img) {
         }
     }
 }
-//Ações no documento html
+/*    ######################    Ações executadas ao iniciar a pagina   ##################       */
 $(document).ready(function () {
     $("#corrida").css("border", 0).css("padding", 0).css("margin", 0);
     $("#corrida").attr("width", 1200).attr("height", 650);
@@ -130,10 +130,11 @@ $(document).ready(function () {
         $(this).prop("disabled", true);
         $("#carro").prop("disabled", true);
     });
+    //Verifica se o jogador já possui um recorde
     if (localStorage.getItem('record')) {
         $("#record").text(localStorage.getItem('record'));
     }
-
+    //Deleta o recorde do usuário
     $("#clear-rc").click(function () {
         $("#record").text(0);
         localStorage.setItem('record', 0);
@@ -147,8 +148,7 @@ $(document).ready(function () {
         tryagain();
     });
 });
-
-//Criação de cenario
+/*   #######################  Inicializa o cenário    ###########################    */
 function criaJogo() {
     context = canvas.getContext('2d');
     quadradosGuia = canvas.height / 8;
@@ -181,28 +181,34 @@ function criaJogo() {
 
 }
 
-
+function desenhaGrama() {
+    context.beginPath();
+    context.fillStyle = "#63ca00";
+    context.fillRect(0, 0, 175, canvas.height);
+    context.fillRect(1069, 0, 175, canvas.height);
+}
+/*              #########################   Ações do carro   #####################                */
 //Movimentação do veiculo
 function movimentaCarro(e) {
     var mv = e.which || e.KeyCode;
     switch (mv) {
         //Esquerda
-        case 37, 97, 65:
+        case 97, 65:
             carro.moveLeft(10);
             desenhaCarro();
             break;
         //Direita
-        case 39, 100, 68:
+        case 100, 68:
             carro.moveRigth(10);
             desenhaCarro();
             break;
         //Cima
-        case 38, 119, 87:
+        case 119, 87:
             carro.moveUp(10);
             desenhaCarro();
             break;
         //Baixo
-        case 40, 115, 83:
+        case 115, 83:
             carro.moveDown(10);
             desenhaCarro();
             break;
@@ -210,7 +216,6 @@ function movimentaCarro(e) {
             break;
     }
 };
-//Desenho da imagen do carro
 function desenhaCarro() {
     context.fillStyle = "#1C1C1C";
     context.fillRect(carro.getX() - 10, carro.getY() - 10, carro.width + 10, canvas.height);
@@ -218,17 +223,11 @@ function desenhaCarro() {
     // context.drawImage(img, cords.x, cords.y, w, h);
 }
 
-function desenhaGrama() {
-    context.beginPath();
-    context.fillStyle = "#63ca00";
-    context.fillRect(0, 0, 175, canvas.height);
-    context.fillRect(1069, 0, 175, canvas.height);
-}
+
 //Cria e movimenta os inimigos
 function inimigos() {
     var ry = [0, 40, 80, 120, 150];
-    var rx = [220, 360, 510, 648, 820];
-    var inimigo = new InimigoSprite(canvas.width / 2, 0);
+    var rx = [240, 400, 540, 698, 850];
     var enemys = [];
     for (var i = 0; i < 5; i++) {
         enemys.push(new InimigoSprite( canvas.width / 2, 0));
@@ -258,7 +257,7 @@ function inimigos() {
     }
     setTimeout(loop, velocidade);
 }
-
+/*                    #################        Iniciar jogo,parar jogo e reiniciar    ####################                      */
 //Inicia o jogo
 function gameStart() {
     var imgCarro = new Image();
@@ -268,6 +267,7 @@ function gameStart() {
     }
     carro = new Carro(600, 500, imgCarro);
     document.addEventListener("keydown", movimentaCarro);
+    document.addEventListener("keyup", movimentaCarro);
     var div = 2;
     function movimentaCenario() {
         //Lateral vermelha e branca
@@ -317,6 +317,7 @@ function gameStart() {
 function gameOver(inimigoColisao) {
     finish = true;
     document.removeEventListener("keydown", movimentaCarro);
+    document.removeEventListener("keyup", movimentaCarro);
     var animate = [
         'img/bloodsplats_0001.png',
         'img/bloodsplats_0002.png',
@@ -341,7 +342,7 @@ function gameOver(inimigoColisao) {
             context.drawImage(this, inimigoColisao.getX() - 10, inimigoColisao.getY() - 10, 140, 140);
         }
     }, 30);
-
+    // Verifica se o usuário possui record e se a pontuação atual é maior que o record
     if (localStorage.getItem('record')) {
         if (localStorage.getItem('record') < score) {
             localStorage.setItem('record', score);

@@ -37,7 +37,7 @@ function InimigoSprite(x, y) {
             context.fillRect(this.x - 5, this.y - movimentoVelocidade, this.width + 15, this.height);
             context.drawImage(fr, this.x, this.y, this.width, this.height);
             i++;
-        }, 100);
+        }, 120);
     }
 
     this.setX = function (x) {

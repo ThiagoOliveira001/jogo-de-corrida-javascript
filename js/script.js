@@ -13,9 +13,6 @@ function InimigoSprite(x, y) {
     this.y = y;
     this.width = 80;
     this.height = 80;
-    // this.img.onload = function () {
-    //     context.drawImage(this.img, this.x, this.y, 80, 80);
-    // }
     this.frames = [
         'img/frame-1.png',
         'img/frame-2.png',
@@ -35,6 +32,7 @@ function InimigoSprite(x, y) {
             }
             let fr = new Image();
             fr.src = this.frames[i];
+            context.beginPath();
             context.fillStyle = "#1C1C1C";
             context.fillRect(this.x - 5, this.y - movimentoVelocidade, this.width + 15, this.height);
             context.drawImage(fr, this.x, this.y, this.width, this.height);
@@ -127,6 +125,7 @@ $(document).ready(function () {
     criaJogo();
     $("#start").click(function () {
         gameStart();
+        //Inicia a contagem de pontos
         var addPts = setInterval(() => {
             score += 1;
             if (!finish) {
@@ -159,11 +158,15 @@ $(document).ready(function () {
     /*  Player de musica */
     var aud = $('audio').get(0);
     aud.play();
-    $(".play-stop").bind('click', function() {
+    $("#play-stop").bind('click', function() {
         if (aud.paused){
             aud.play();
+            $("#play-stop i").remove();
+            $("#play-stop").append($("<i/>").text("play_arrow").addClass("material-icons"));
         } else {
             aud.pause();
+            $("#play-stop i").remove();
+            $("#play-stop").append($("<i/>").text("stop").addClass("material-icons"));
         }   
     });
 });
@@ -175,44 +178,28 @@ function criaJogo() {
     desenhaGrama();
 
     //Faixas vermelho e branco 
-    //Esquerda 
+    //Esquerda e direita
     for (var i = 0; i < 8; i++) {
         if (i % 2 == 0) {
             context.fillStyle = "red";
             context.fillRect(175, (i * quadradosGuia), 40, quadradosGuia);
+            context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
         } else {
             context.fillStyle = "white";
             context.fillRect(175, (i * quadradosGuia), 40, quadradosGuia);
-        }
-    }
-
-
-    //Direita
-    for (var i = 0; i < 8; i++) {
-        if (i % 2 == 0) {
-            context.fillStyle = "red";
-            context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
-        } else {
-            context.fillStyle = "white";
             context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
         }
     }
-
 }
 
 function desenhaGrama() {
-    // context.beginPath();
-    // context.fillStyle = "#63ca00";
-    // //Esquerda
-    // context.fillRect(0, 0, 175, canvas.height);
-    // //Direita
-    // context.fillRect(1069, 0, 175, canvas.height);
     var grass = new Image();
     grass.src = 'img/grass.jpg';
     var sand = new Image();
     sand.src = 'img/sand.jpg';
     var water = new Image();
     water.src = 'img/water.jpg';
+    //Grama
     grass.onload = function() {
         var gramaQtde = Math.ceil(canvas.height / this.height);
         for (var i = 0; i < gramaQtde; i++) {
@@ -222,12 +209,14 @@ function desenhaGrama() {
             context.drawImage(this, 100, (i * this.height) ,75, this.height + 8);
         }
     }
+    //Areia
     sand.onload = function() {
         var sandQtde = Math.ceil(canvas.height / this.height);
         for (var i = 0; i < sandQtde; i++) {
             context.drawImage(this, 50, (i * this.height), 50, this.height + 8);
         }
     }
+    //Agua
     water.onload = function() {
         var waterQtde = Math.ceil(canvas.height / this.height);
         for (var i = 0; i < waterQtde; i++) {
@@ -268,10 +257,10 @@ function movimentaCarro(e) {
     }
 };
 function desenhaCarro() {
+    context.beginPath();
     context.fillStyle = "#1C1C1C";
-    context.fillRect(carro.getX() - 10, carro.getY() - 10, carro.width + 10, carro.height + 20);
-    context.drawImage(carro.getImg(), carro.getX(), carro.getY(), carro.getWidth(), carro.getWidth());
-    // context.drawImage(img, cords.x, cords.y, w, h);
+    context.fillRect(carro.getX() - 10, carro.getY() - 10, carro.getWidth() + 10, carro.getHeight() + 20);
+    context.drawImage(carro.getImg(), carro.getX(), carro.getY(), carro.getWidth(), carro.getHeight());
 }
 
 
@@ -290,9 +279,7 @@ function inimigos() {
                 gameOver(enemys[i]);
                 break;
             } else {
-                console.log(enemys[i]);
                 if (enemys[i].getY() > canvas.height) {
-                    
                     enemys[i].setY(ry[Math.floor(Math.random() * (3))]);
                     enemys[i].setX(rx[Math.floor(Math.random() * (5))]);   
                 }
@@ -313,10 +300,10 @@ function inimigos() {
 /*                    #################        Iniciar jogo,parar jogo e reiniciar    ####################                      */
 //Inicia o jogo
 function gameStart() {
-    var imgCarro = new Image(80, 80);
+    var imgCarro = new Image();
     imgCarro.src = carroEscolhido;
     imgCarro.onload = function () {
-        context.drawImage(this, 600, 500, 80, 80);
+        context.drawImage(this, 600, 500, 120, 120);
     }
     carro = new Carro(600, 500, imgCarro);
     document.addEventListener("keydown", movimentaCarro);

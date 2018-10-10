@@ -84,7 +84,7 @@ function Carro(x, y, img) {
     this.getImg = function () {
         return this.img;
     }
-
+    //Movimentação, os ifs estabelecem o limite do cenario
     this.moveLeft = function (value) {
         if ((this.x - value) >= 223) {
             this.x -= value;

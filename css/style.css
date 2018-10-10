@@ -22,14 +22,15 @@ html , body {
     top: 0;
     right: 0;
     padding: 30px;
-    height: 300px;
-    width: 100px;
+    height: 330px;
+    width: 106px;
+    background: rgb(189, 189, 189);
 }
 
 #options button {
     border-radius: 25;
-    border: 1px solid gray;
-    box-shadow: 2px 2px 2px gray; 
+    border: 1px solid rgb(189, 189, 189);;
+    box-shadow: 2px 2px 2px rgb(189, 189, 189);; 
 }
 
 #info {
@@ -39,6 +40,8 @@ html , body {
     right: 0;
     width: 150px;
     font-family: 'Arial';
+    background: rgb(189, 189, 189);
+    padding: 8px;
 }
 
 

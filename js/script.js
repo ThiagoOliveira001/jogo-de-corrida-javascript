@@ -34,7 +34,7 @@ function InimigoSprite(x, y) {
             let fr = new Image();
             fr.src = this.frames[i];
             context.fillStyle = "#1C1C1C";
-            context.fillRect(this.x - 5, this.y - movimentoVelocidade, this.width + 15, this.height);
+            context.fillRect(this.x - 5, this.y - movimentoVelocidade, this.width + 15, this.height - 15);
             context.beginPath();
             context.drawImage(fr, this.x, this.y, this.width, this.height);
             i++;

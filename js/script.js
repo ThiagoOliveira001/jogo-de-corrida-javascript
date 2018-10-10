@@ -181,10 +181,12 @@ function criaJogo() {
     //Esquerda e direita
     for (var i = 0; i < 8; i++) {
         if (i % 2 == 0) {
+            context.beginPath();
             context.fillStyle = "red";
             context.fillRect(175, (i * quadradosGuia), 40, quadradosGuia);
             context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
         } else {
+            context.beginPath();
             context.fillStyle = "white";
             context.fillRect(175, (i * quadradosGuia), 40, quadradosGuia);
             context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
@@ -305,26 +307,31 @@ function gameStart() {
     carro = new Carro(600, 500, imgCarro);
     document.addEventListener("keydown", movimentaCarro);
     document.addEventListener("keyup", movimentaCarro);
+    //Determina a divisão(ordenação das faixas)
     var div = 2;
     function movimentaCenario() {
         //Lateral vermelha e branca
         for (var i = 0; i < 8; i++) {
             if (div == 2) {
                 if (i % 2 == 0) {
+                    context.beginPath();
                     context.fillStyle = "red";
                     context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
                     context.fillRect(175, (i * quadradosGuia), 40, quadradosGuia);
                 } else {
+                    context.beginPath();
                     context.fillStyle = "white";
                     context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
                     context.fillRect(175, (i * quadradosGuia), 40, quadradosGuia);
                 }
             } else {
                 if (i % 2 != 0) {
+                    context.beginPath();
                     context.fillStyle = "red";
                     context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
                     context.fillRect(175, (i * quadradosGuia), 40, quadradosGuia);
                 } else {
+                    context.beginPath();
                     context.fillStyle = "white";
                     context.fillRect(1029, (i * quadradosGuia), 40, quadradosGuia);
                     context.fillRect(175, (i * quadradosGuia), 40, quadradosGuia);

@@ -32,9 +32,9 @@ function InimigoSprite(x, y) {
             }
             let fr = new Image();
             fr.src = this.frames[i];
-            context.beginPath();
             context.fillStyle = "#1C1C1C";
             context.fillRect(this.x - 5, this.y - movimentoVelocidade, this.width + 15, this.height);
+            context.beginPath();
             context.drawImage(fr, this.x, this.y, this.width, this.height);
             i++;
         }, 120);
@@ -256,16 +256,16 @@ function movimentaCarro(e) {
     }
 };
 function desenhaCarro() {
-    context.beginPath();
     context.fillStyle = "#1C1C1C";
     context.fillRect(carro.getX() - 10, carro.getY() - 10, carro.getWidth() + 10, carro.getHeight() + 20);
+    context.beginPath();
     context.drawImage(carro.getImg(), carro.getX(), carro.getY(), carro.getWidth(), carro.getHeight());
 }
 
 
 //Cria e movimenta os inimigos
 function inimigos() {
-    var ry = [0, 80, 150];
+    var ry = [0, 80, 160];
     var rx = [220, 400, 600, 800, 935];
     var enemys = [];
     for (var i = 0; i < 5; i++) {

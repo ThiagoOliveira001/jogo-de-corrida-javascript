@@ -56,6 +56,7 @@ function InimigoSprite(x, y) {
 
     this.bateu = function (carro) {
         if (this.x + this.width - 15 > carro.x && this.x + 25 < carro.x + carro.width && this.y + this.height > carro.y && this.y < carro.y + this.height) {
+            finish = true;
             return true;
         }
         return false;
@@ -248,7 +249,7 @@ function movimentaCarro() {
         }
         //Baixo
         if (keyState[115] || keyState[83]) {
-            carro.moveDown(10);
+            carro.moveDown(5);
             desenhaCarro();
         }
         setTimeout(movimentaCarro, 10);
@@ -364,7 +365,6 @@ function gameStart() {
 }
 //Ações para serem executadas após falha do usuário
 function gameOver(inimigoColisao) {
-    finish = true;
     document.removeEventListener("keydown", kdown);
     document.removeEventListener("keyup", kup);
     var animate = [
@@ -376,6 +376,7 @@ function gameOver(inimigoColisao) {
         'img/bloodsplats_0006.png',
         'img/bloodsplats_0007.png'
     ];
+    desenhaCarro();
     //Animação sangue
     var sprite = setInterval(() => {
         if (animate.length == 0) {
@@ -388,9 +389,9 @@ function gameOver(inimigoColisao) {
         var img = new Image();
         img.src = animate.shift();
         img.onload = function () {
-            context.drawImage(this, inimigoColisao.getX() - 10, inimigoColisao.getY() - 10, 140, 140);
+            context.drawImage(this, inimigoColisao.getX() - 10, inimigoColisao.getY() - 15, 140, 140);
         }
-    }, 30);
+    }, 40);
     // Verifica se o usuário possui record e se a pontuação atual é maior que o record
     if (localStorage.getItem('record')) {
         if (localStorage.getItem('record') < score) {

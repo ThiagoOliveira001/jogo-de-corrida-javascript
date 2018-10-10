@@ -230,6 +230,7 @@ function desenhaGrama() {
 //Movimentação do veiculo
 function movimentaCarro(e) {
     var mv = e.which || e.KeyCode;
+    //Tem dois valores para funcionar com caps-lock ativo tb
     switch (mv) {
         //Esquerda
         case 97, 65:
@@ -265,7 +266,7 @@ function desenhaCarro() {
 
 //Cria e movimenta os inimigos
 function inimigos() {
-    var ry = [0, 80, 160];
+    var ry = [0, 90, 180];
     var rx = [220, 400, 600, 800, 935];
     var enemys = [];
     for (var i = 0; i < 5; i++) {

@@ -70,6 +70,7 @@ html , body {
     user-select: none;
     background-color: rgb(241, 240, 240);
     box-shadow: 4px 4px 5px gray;
+    cursor: pointer;
 }
 
 #player #play-stop:focus {

@@ -7,6 +7,7 @@ var carro;
 var finish = false;
 var quadradosGuia;
 var movimentoVelocidade = 10;
+var keyState = {};
 //Classes
 function InimigoSprite(x, y) {
     this.x = x;
@@ -228,34 +229,34 @@ function desenhaGrama() {
 }
 /*              #########################   Ações do carro   #####################                */
 //Movimentação do veiculo
-function movimentaCarro(e) {
-    var mv = e.which || e.KeyCode;
-    //Tem dois valores para funcionar com caps-lock ativo tb
-    switch (mv) {
+function movimentaCarro() {
+    if (!finish) {    
         //Esquerda
-        case 97, 65:
-            carro.moveLeft(10);
+        if (keyState[97] || keyState[65]) {
+            carro.moveLeft(5);
             desenhaCarro();
-            break;
+        }   
         //Direita
-        case 100, 68:
-            carro.moveRigth(10);
+        if (keyState[100] || keyState[68]) {
+            carro.moveRigth(5);
             desenhaCarro();
-            break;
+        }
         //Cima
-        case 119, 87:
-            carro.moveUp(10);
+        if (keyState[19] || keyState[87]) {
+            carro.moveUp(5);
             desenhaCarro();
-            break;
+        }
         //Baixo
-        case 115, 83:
+        if (keyState[115] || keyState[83]) {
             carro.moveDown(10);
             desenhaCarro();
-            break;
-        default:
-            break;
+        }
+        setTimeout(movimentaCarro, 10);
     }
 };
+movimentaCarro();
+
+
 function desenhaCarro() {
     context.fillStyle = "#1C1C1C";
     context.fillRect(carro.getX() - 10, carro.getY() - 10, carro.getWidth() + 10, carro.getHeight() + 20);
@@ -306,8 +307,8 @@ function gameStart() {
         context.drawImage(this, 600, 500, 120, 120);
     }
     carro = new Carro(600, 500, imgCarro);
-    document.addEventListener("keydown", movimentaCarro);
-    document.addEventListener("keyup", movimentaCarro);
+    document.addEventListener("keydown", kdown, true);
+    document.addEventListener("keyup", kup, true);
     //Determina a divisão(ordenação das faixas)
     var div = 2;
     function movimentaCenario() {
@@ -364,8 +365,8 @@ function gameStart() {
 //Ações para serem executadas após falha do usuário
 function gameOver(inimigoColisao) {
     finish = true;
-    document.removeEventListener("keydown", movimentaCarro);
-    document.removeEventListener("keyup", movimentaCarro);
+    document.removeEventListener("keydown", kdown);
+    document.removeEventListener("keyup", kup);
     var animate = [
         'img/bloodsplats_0001.png',
         'img/bloodsplats_0002.png',
@@ -402,4 +403,13 @@ function gameOver(inimigoColisao) {
 // Faz um reload na pagina para reiniciar o jogo
 function tryagain() {
     location.reload();
+}
+
+//Listeners para movimentar carro
+function kdown(e) {
+    keyState[e.keyCode || e.which] = true;
+}
+
+function kup(e) {
+    keyState[e.keyCode || e.which] = false;
 }

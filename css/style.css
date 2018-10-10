@@ -27,12 +27,15 @@ html , body {
     background: rgb(189, 189, 189);
 }
 
-#options button {
-    border-radius: 25;
-    border: 1px solid rgb(189, 189, 189);;
-    box-shadow: 2px 2px 2px rgb(189, 189, 189);; 
+#options .action {
+    border-radius: 30;
+    border: 1px solid rgb(46, 46, 46);
+    box-shadow: 3px 3px 4px rgb(95, 95, 95);
+    color: white;
+    padding: 5px;
+    width: 60px;
+    cursor: pointer;
 }
-
 #info {
     position: absolute;
     text-align: center;
@@ -46,14 +49,25 @@ html , body {
 
 
 
-audio {
-    position: absolute;
-    top: 0;
-    margin: 30;
-    width: 20px;
+#start {
+    background-color: rgb(45, 209, 45);
 }
 
+#start:disabled {
+    background-color: rgb(45, 209, 45, 0.5);
+}
 
+#clear-rc {
+    background-color: rgb(202, 202, 0);
+}
+
+#try-again {
+    background-color: rgb(211, 3, 3);
+}
+
+#player .play-stop {
+    border-radius: 100%;
+}
 @font-face {
     font-family: 'mortal';
     src: url('../fonts/mortal-kombat-4.woff') format('woff');

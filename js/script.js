@@ -155,6 +155,17 @@ $(document).ready(function () {
     $("#try-again").click(function () {
         tryagain();
     });
+
+    /*  Player de musica */
+    var aud = $('audio').get(0);
+    aud.play();
+    $(".play-stop").bind('click', function() {
+        if (aud.paused){
+            aud.play();
+        } else {
+            aud.pause();
+        }   
+    });
 });
 /*   #######################  Inicializa o cenário    ###########################    */
 function criaJogo() {

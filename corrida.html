@@ -7,28 +7,28 @@
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/script.js"></script>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-    <!-- <iframe src="audio/Gear.mp3" allow="autoplay" style="display:none" id="iframeAudio">
-    </iframe> -->
-    <!-- <audio autoplay loop>
-        <source src="audio/Gear.mp3" type="audio/mpeg">
-    </audio> -->
-    <canvas id="corrida" >
+    <canvas id="corrida">
         Este navegador não possui suporte a canvas!
     </canvas>
     <p style="font-size: 0.5px;">.</p>
     <div id="options">
         <div>
-            <p>SCORE: <span id="pts">0</span></p>
+            <p>SCORE:
+                <span id="pts">0</span>
+            </p>
         </div>
         <div>
             <img id="carro-selecionado" src="img/car_black.svg" width="80" height="100">
         </div>
         <div>
-            <p>RECORD: <span id="record">0</span></p>
-        </div> 
+            <p>RECORD:
+                <span id="record">0</span>
+            </p>
+        </div>
         <div>
             <select id="carro">
                 <option value="img/car_black.svg">Preto</option>
@@ -39,25 +39,41 @@
             </select>
         </div>
         <div>
-            <button id="start">START</button>
-            <button id="clear-rc">RESET</button>
+            <button title="Iniciar jogo" class="action" id="start">START</button>
+            <button title="Zerar record" class="action" id="clear-rc">RESET</button>
         </div>
         <div>
-            <button id="try-again">TRY AGAIN</button>
+            <button title="Tentar novamente" class="action" id="try-again">TRY AGAIN</button>
+        </div>
+        <div id="player">
+            <audio src="audio/Gear.mp3"  loop>
+                <source src="audio/Gear.mp3" type="audio/mpeg">
+            </audio> 
+            <span>Musica</span><br>
+            <button class="play-stop">
+                <i class="material-icons">
+                    play_arrow
+                </i>
+            </button>
+            <button class="play-stop">
+                <i class="material-icons">
+                    stop
+                </i>
+            </button>
         </div>
     </div>
     <div id="info">
         <div style="font-size: 0.7em;margin-right: 10px;">
             <h3>História</h3>
             <p style="font-family: 'Arial';">
-                Durante uma viagem você cruza com uma migração de pombos mutantes, <br>
-                eles não conseguem voar acima de seu carro, e você não quer sujar o carro <br>
-                então é melhor não atingilos 
+                Durante uma viagem você cruza com uma migração de pombos mutantes,
+                <br> eles não conseguem voar acima de seu carro, e você não quer sujar o carro
+                <br> então é melhor não atingilos
             </p>
         </div>
         <div>
             <figure>
-                <img src="img/wasd.png" width="80" height="100">
+                <img src="img/wasd.png" style="filter: opacity(100%)" width="80" height="100">
                 <figcaption style="margin-right: 10px">Movimenta o veiculo</figcaption>
             </figure>
         </div>

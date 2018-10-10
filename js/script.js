@@ -162,11 +162,11 @@ $(document).ready(function () {
         if (aud.paused){
             aud.play();
             $("#play-stop i").remove();
-            $("#play-stop").append($("<i/>").text("play_arrow").addClass("material-icons"));
+            $("#play-stop").append($("<i/>").text("stop").addClass("material-icons"));
         } else {
             aud.pause();
             $("#play-stop i").remove();
-            $("#play-stop").append($("<i/>").text("stop").addClass("material-icons"));
+            $("#play-stop").append($("<i/>").text("play_arrow").addClass("material-icons"));
         }   
     });
 });
@@ -223,9 +223,6 @@ function desenhaGrama() {
             context.drawImage(this, 0, (i * this.height), 50, this.height + 8);
         }
     }
-
-
-
 }
 /*              #########################   Ações do carro   #####################                */
 //Movimentação do veiculo
@@ -270,7 +267,7 @@ function inimigos() {
     var rx = [220, 400, 600, 800, 935];
     var enemys = [];
     for (var i = 0; i < 5; i++) {
-        enemys.push(new InimigoSprite( canvas.width / 2, 0));
+        enemys.push(new InimigoSprite(rx[Math.floor(Math.random() * (5))] , ry[Math.floor(Math.random() * (3))]));
     }
     function loop() {
         for (var i = 0; i < 5; i++) {
